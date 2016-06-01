@@ -1,0 +1,104 @@
+http://www.liaoxuefeng.com/
+
+$ git help git
+
+$ git config --global user.name "Luke DBA"
+
+$ git config --global user.email "luke.dba@gmail.com"
+
+$ cd /c
+
+
+$ mkdir lukedbagit
+
+
+$ cd lukedbagit
+
+
+$ pwd
+/c/lukedbagit
+
+git init
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+$ git add git101.txt
+
+
+$ git commit -m "wrote git basic tutor file"
+
+git status
+git diff
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+$ git log --pretty=oneline
+71014643f035df5269274329ead931cbbb2bddce append status/diff command
+8a8b9dddb5baa807ed5295e3c65e9fd74d73311d append add/commit command
+d638d2b24ec163e9b8da564fe76890c018ba2323 wrote git basic tutor file
+
+
+$ git reset --hard HEAD^
+
+
+$ git reset --hard 71014643f035d
+
+
+$ git reflog
+用HEAD表示当前版本
+上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。
+Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。
+
+提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：
+每次修改，如果不add到暂存区，那就不会加入到commit中。
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+命令git checkout -- readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，这里有两种情况：
+
+一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；
+
+一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。
+
+总之，就是让这个文件回到最近一次git commit或git add时的状态。
+git checkout -- file命令中的--很重要，没有--，就变成了“切换到另一个分支”的命令，我们在后面的分支管理中会再次遇到git checkout命令。
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+命令git reset HEAD file可以把暂存区的修改撤销掉（unstage），重新放回工作区：
+git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。
+
+场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD file，就回到了场景1，第二步按场景1操作。
+
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+
+special case:
+一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。
+step 1: use git checkout -- file;
+step 2: use git reset HEAD file;
+step 3: use checkout -- file ; (again)
+
+在Git中，删除也是一个修改操作
+after you delete that file in OS,
+有两个选择，一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：
+另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：
+
+git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。
+命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。
+
+scenarios of deleting by mistake:
+1. only delete by OS: git checkout -- file
+2. delete by OS, and git rm:  git reset HEAD file, then git checkout -- file;
+3. after git commit, you have to roll back to a previous version.
+(this might be troublesome, if multiple change on multiple files exists; maybe branch could help)
+
+##################################
+github setting:
+ ssh-keygen -t rsa -C "youremail@example.com"
+你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，由于这个Key也不是用于军事目的，所以也无需设置密码。
+
+如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+
+
